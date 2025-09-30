@@ -17,6 +17,9 @@ object bumblebee{
     method estaTransformadoRobot() {
         esRobot = false
     } 
+    method cambiarEstado(unEstado) {
+        esAuto = unEstado
+    } 
     method peso() = 800
     method esPesoPar() = self.peso().even()
     method peligrosidad() = if(esAuto) 15 else 30
@@ -28,7 +31,10 @@ object ladrillos{
     method cantidadDeLadrillos(nuevaCantidad) {
         cantidad = nuevaCantidad
     } 
-    method nivelDePeligrosidad() = 2
+    method peligrosidad() = 2
+    method añadirLadrillos(nuevoLadrillos) {
+        cantidad += nuevoLadrillos
+    } 
 }
 
 object arena {
@@ -36,22 +42,22 @@ object arena {
     method peso(nuevoPeso){
         peso = nuevoPeso
     } 
-    method nivelDePeligrosidad() = 1
+    method peligrosidad() = 1
 }
 
 object bateriaAntiaerea {
     var tieneMisiles = true
-     method estaCargadoConMisiles() {
-        tieneMisiles = true
+    method cambiarEstado(unEstado) {
+        tieneMisiles = unEstado
     } 
     method peso() = if(tieneMisiles) 300 else 200 
-    method peligrosidad() {
+    method peligrosidad() =
         if(tieneMisiles){
             100
         }else{
             0
         }
-    }
+    
 }
 
 object contenedorPortuario {
@@ -62,9 +68,9 @@ object contenedorPortuario {
     method quitarUnaCosa(nuevaCosa) {
         cosas.remove(nuevaCosa)
     } 
-    method peso() {
+    method peso() =
         100 + cosas.sum({cosas => cosas.peso()})
-    } 
+    
     method peligrosidad() { return
         if(cosas.isEmpty()){
              0
@@ -74,18 +80,23 @@ object contenedorPortuario {
     }
 }
 
-object residuosRadiactivos {
-    var property peso = 0
-    method peligrosidad() = 200 
+
+object residuo {
+    var property peso = 1
+    method peligrosidad() = 200
+    method bulto() = 1
+    method serCargado() { self.peso(+15)}
 }
 
 object embalajeDeSeguridad {
-    const cosas = arena
-    
-    method peso() {
-        cosas.peso()
+    var cosas = arena
+    method objetoContenido(unaCosa) {
+        cosas = unaCosa
     }
-    method peligrosidad() {
+    method peso() =
+        cosas.peso()
+    
+    method peligrosidad() =
         cosas.peligrosidad() / 2
-    } 
+    
 }

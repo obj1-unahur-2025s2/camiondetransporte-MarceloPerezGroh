@@ -1,9 +1,38 @@
 import camion.*
+import cosas.*
 
-describe "group of test for camion" {
 
-  test "first test" {
-    assert.that(true)
+describe "Cargar en un camion a bumblebee como robot, arena a granel con 150kgs, la bateria antiaerea con misiles y el embalaje de seguridad y como contenido de ladrillos con 80 ladrillos." {
+  method initialize() {
+    bumblebee.cambiarEstado(true)
+    arena.peso(150)
+    bateriaAntiaerea.cambiarEstado(true)
+    ladrillos.cantidadDeLadrillos(80)
+    embalajeDeSeguridad.objetoContenido(ladrillos)
+    camion.carga(bumblebee)
+    camion.carga(arena)
+    camion.carga(bateriaAntiaerea)
+    camion.carga(embalajeDeSeguridad)
   }
 
+  test "test peso"{
+    assert.equals(1226, camion.pesoTotal())
+    assert.equals(2226, camion.pesoTotal())
+    assert.that(camion.esCargaPar())
+    assert.that(camion.superanElNivelDePeligrosidad(3000))
+    assert.notThat(camion.exedeElPeso())
+    assert.equals(bumblebee, camion.cosaMasPesada())
+    assert.that(camion.algunaCosaPesaEntre(195, 1000))
+  }
+
+  test "test peligrosidad"{
+    assert.equals(bumblebee, camion.primeraCarga(5000))
+    assert.equals([bumblebee, bateriaAntiaerea], camion.todasLasCosasConMasPeligrosidad(50))
+    assert.that(camion.puedeCircular(50))
+    assert.that(camion.superanElNivelDePeligrosidad(10).contains(bumblebee))
+    assert.that(camion.superanElNivelDePeligrosidad(arena).contains(bateriaAntiaerea))
+    assert.that(camion.superanElNivelDePeligrosidad(ladrillos).contains(bumblebee))
+    assert.notThat(camion.puedeCircular(50))
+  }
 }
+
